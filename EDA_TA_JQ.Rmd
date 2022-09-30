@@ -44,7 +44,7 @@ perc(data_Age)
 ```
 
 
-Get top 7 Age Numbers
+### Get top 7 Age Numbers
 
 
 ```{r}
@@ -62,4 +62,35 @@ ggplot(data = Age_Name, aes(x= n, y= Age ))+
   ggtitle("Count of Age")
  
 ```
+
+
+## Table of How and where did you hear about this course?
+
+```{r}
+data_Platform <- df_Course %>% group_by(`How and where did you hear about this course?`)%>% count()%>% arrange(desc(n))
+perc(data_Platform)
+```
+
+
+### Get top 7 How and where did you hear about this course?
+
+
+```{r}
+Platform_Name  <- data_Platform %>% ungroup() %>% top_n(7, n) %>% arrange(desc(n))
+perc(Platform_Name)
+```
+
+
+### Bar chart of Age
+
+```{r}
+ggplot(data = Platform_Name, aes(x= n, y= `How and where did you hear about this course?` ))+
+  geom_bar(stat= "identity",  fill = "#21B6A8")+
+  geom_text(aes(label = n), vjust = -0.2)+
+  ggtitle("Count of How and where did you hear about this course?")
+ 
+```
+
+
+
 

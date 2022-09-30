@@ -1,0 +1,65 @@
+---
+title: "Exploraotry Data Analysis"
+author: "javaria"
+date: '2022-09-30'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Describe Functions.
+
+```{r}
+perc <- function(data) {
+  percent <- data %>% ungroup() %>% mutate(Percentage = (n/sum(n))*100)
+  return(percent)
+}
+
+```
+
+
+```{r}
+library(tidyverse)
+library(formattable)
+library(leaflet)
+```
+
+
+# Read Dataset
+
+```{r}
+df_Course <- read_csv("Data/Data - DS C1 Course.csv")
+```
+
+# Univariate Analysis
+
+
+## Table of Age
+
+```{r}
+data_Age <- df_Course %>% group_by(Age)%>% count()%>% arrange(desc(n))
+perc(data_Age)
+```
+
+
+Get top 7 Age Numbers
+
+
+```{r}
+Age_Name  <- data_Age %>% ungroup() %>% top_n(7, n) %>% arrange(desc(n))
+perc(Age_Name)
+```
+
+
+Bar chart of Age
+
+```{r}
+ggplot(data = Age_Name, aes(x= n, y= Age ))+
+  geom_bar(stat= "identity",  fill = "#21B6A8")+
+  geom_text(aes(label = n), vjust = -0.2)+
+  ggtitle("Count of Age")
+ 
+```
+

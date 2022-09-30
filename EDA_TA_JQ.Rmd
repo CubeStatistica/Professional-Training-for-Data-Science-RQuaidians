@@ -92,5 +92,55 @@ ggplot(data = Platform_Name, aes(x= n, y= `How and where did you hear about this
 ```
 
 
+## Table of 
+
+```{r}
+data_City <- df_Course %>% group_by(`Which City are you currently residing in?`)%>% count()%>% arrange(desc(n))
+perc(data_City)
+```
 
 
+## Creating new variable name City.
+
+```{r}
+df_Course <- df_Course %>% mutate(City = case_when(`Which City are you currently residing in?` == 'Karachi' ~'Karachi',
+                                                   `Which City are you currently residing in?` == 'karachi' ~'Karachi',
+                                                    `Which City are you currently residing in?` == 'KARACHI' ~'Karachi',
+                                                    `Which City are you currently residing in?` == 'Islamabad' ~'Islamabad',
+                                                    `Which City are you currently residing in?` == 'ISLAMABAD' ~'Islamabad',
+                                                    `Which City are you currently residing in?` == 'islamabad' ~'Islamabad',
+                                                    `Which City are you currently residing in?` == 'LAHORE' ~'Lahore',
+                                                    `Which City are you currently residing in?` == 'Lahore' ~'Lahore',
+                                                    `Which City are you currently residing in?` == 'Nowshera' ~'Nowshera',
+                                                    `Which City are you currently residing in?` == 'Rawalpindi' ~'Rawalpindi',
+                                                    `Which City are you currently residing in?` == 'Abbottabad' ~'Abbottabad',
+                                                    `Which City are you currently residing in?` == 'Abbottabad Pakistan' ~'Abbottabad',
+                                                    `Which City are you currently residing in?` == 'Ariana' ~'Ariana',
+                                                    `Which City are you currently residing in?` == 'Batkhela, Malakand' ~'Batkhela',
+                                                    `Which City are you currently residing in?` == 'Calgary' ~'Calgary',
+                                                    `Which City are you currently residing in?` == 'Chakwal' ~'Chakwal',
+                                                    `Which City are you currently residing in?` == 'D.I.Khan' ~'D.I.Khan',
+                                                    `Which City are you currently residing in?` == 'Denver' ~'Denver',
+                                                    `Which City are you currently residing in?` == 'Faisalabad' ~'Faisalabad',
+                                                    `Which City are you currently residing in?` == 'Gilgit' ~'Gilgit',
+                                                    `Which City are you currently residing in?` == 'Gohenberg' ~'Gohenberg',
+                                                    `Which City are you currently residing in?` == 'Guelph' ~'Guelph',
+                                                    `Which City are you currently residing in?` == 'Gujrat' ~'Gujrat',
+                                                    `Which City are you currently residing in?` == 'Hail' ~'Hail',
+                                                    `Which City are you currently residing in?` == 'Hyderabad' ~'Hyderabad',
+                                                    `Which City are you currently residing in?` == 'Jamshoro' ~'Jamshoro',
+                                                    `Which City are you currently residing in?` == 'Jaranwala' ~'Jaranwala',
+                                                    `Which City are you currently residing in?` == 'Jeddah' ~'Jeddah',
+                                                    `Which City are you currently residing in?` == 'Koln' ~'Koln',
+                                                    `Which City are you currently residing in?` == 'Kushtia' ~'Kushtia',
+                                                    `Which City are you currently residing in?` == 'Layyah' ~'Layyah',
+                                                    `Which City are you currently residing in?` == 'Multan' ~'Multan',
+                                                    `Which City are you currently residing in?` == 'Oakville' ~'Oakville',
+                                                    `Which City are you currently residing in?` == 'Sheikhupura' ~'Sheikhupura',
+                                                    `Which City are you currently residing in?` == 'Sialkot' ~'Sialkot',
+                                                    `Which City are you currently residing in?` == 'Toronto' ~'Toronto',
+                                                    `Which City are you currently residing in?` == 'NA' ~'na',
+                                                    `Which City are you currently residing in?` == 'Pakistan' ~'na'))
+
+
+```

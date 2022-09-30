@@ -173,3 +173,21 @@ ggplot(data = city_Name, aes(x= n, y= City ))+
   ggtitle("Count of City")
  
 ```
+
+## Table of Are you currently attending University / College?
+
+```{r}
+data_cStudy <- df_Course %>% group_by(`Are you currently attending University / College?`)%>% count()%>% arrange(desc(n))
+perc(data_cStudy)
+```
+
+
+### Bar chart of Are you currently attending University / College?
+
+```{r}
+ggplot(data = data_cStudy, aes(x= n, y= `Are you currently attending University / College?` ))+
+  geom_bar(stat= "identity",  fill = "#21B6A8")+
+  geom_text(aes(label = n), vjust = -0.2)+
+  ggtitle("Count of Are you currently attending University / College?")
+ 
+```

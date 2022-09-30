@@ -53,7 +53,7 @@ perc(Age_Name)
 ```
 
 
-Bar chart of Age
+### Bar chart of Age
 
 ```{r}
 ggplot(data = Age_Name, aes(x= n, y= Age ))+
@@ -81,7 +81,7 @@ perc(Platform_Name)
 ```
 
 
-### Bar chart of Age
+
 
 ```{r}
 ggplot(data = Platform_Name, aes(x= n, y= `How and where did you hear about this course?` ))+
@@ -92,7 +92,7 @@ ggplot(data = Platform_Name, aes(x= n, y= `How and where did you hear about this
 ```
 
 
-## Table of 
+## Table of Which City are you currently residing in?
 
 ```{r}
 data_City <- df_Course %>% group_by(`Which City are you currently residing in?`)%>% count()%>% arrange(desc(n))
@@ -105,6 +105,7 @@ perc(data_City)
 ```{r}
 df_Course <- df_Course %>% mutate(City = case_when(`Which City are you currently residing in?` == 'Karachi' ~'Karachi',
                                                    `Which City are you currently residing in?` == 'karachi' ~'Karachi',
+                                                   `Which City are you currently residing in?` == 'Peshawar' ~'Peshawar',
                                                     `Which City are you currently residing in?` == 'KARACHI' ~'Karachi',
                                                     `Which City are you currently residing in?` == 'Islamabad' ~'Islamabad',
                                                     `Which City are you currently residing in?` == 'ISLAMABAD' ~'Islamabad',
@@ -142,5 +143,33 @@ df_Course <- df_Course %>% mutate(City = case_when(`Which City are you currently
                                                     `Which City are you currently residing in?` == 'NA' ~'na',
                                                     `Which City are you currently residing in?` == 'Pakistan' ~'na'))
 
+```
 
+
+
+## Table of Which City are you currently residing in?
+
+```{r}
+data_city <- df_Course %>% group_by(City)%>% count()%>% arrange(desc(n))
+perc(data_city)
+```
+
+
+### Get top 7 Cities
+
+
+```{r}
+city_Name  <- data_city %>% ungroup() %>% top_n(7, n) %>% arrange(desc(n))
+perc(city_Name)
+```
+
+
+### Bar chart of City
+
+```{r}
+ggplot(data = city_Name, aes(x= n, y= City ))+
+  geom_bar(stat= "identity",  fill = "#21B6A8")+
+  geom_text(aes(label = n), vjust = -0.2)+
+  ggtitle("Count of City")
+ 
 ```

@@ -191,3 +191,21 @@ ggplot(data = data_cStudy, aes(x= n, y= `Are you currently attending University 
   ggtitle("Count of Are you currently attending University / College?")
  
 ```
+
+## Table of Latest Degree Completed or in Progress?
+
+```{r}
+data_lStudy <- df_Course %>% group_by(`Latest Degree Completed or in Progress?`)%>% count()%>% arrange(desc(n))
+perc(data_lStudy)
+```
+
+
+### Bar chart of Latest Degree Completed or in Progress?
+
+```{r}
+ggplot(data = data_lStudy, aes(x= n, y= `Latest Degree Completed or in Progress?`))+
+  geom_bar(stat= "identity",  fill = "#21B6A8")+
+  geom_text(aes(label = n), vjust = -0.2)+
+  ggtitle("Count of Latest Degree Completed or in Progress?")
+ 
+```

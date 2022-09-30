@@ -209,3 +209,33 @@ ggplot(data = data_lStudy, aes(x= n, y= `Latest Degree Completed or in Progress?
   ggtitle("Count of Latest Degree Completed or in Progress?")
  
 ```
+
+
+
+## Table of Name of University or College currently or previously attended?
+
+```{r}
+data_Uni <- df_Course %>% group_by(`Name of University or College currently or previously attended?`)%>% count()%>% arrange(desc(n))
+perc(data_Uni)
+```
+
+### Get top 7 Cities
+
+
+```{r}
+Uni_Name  <- data_Uni %>% ungroup() %>% top_n(7, n) %>% arrange(desc(n))
+perc(Uni_Name)
+```
+
+
+
+### Bar chart of Latest Degree Completed or in Progress?
+
+```{r}
+ggplot(data = Uni_Name, aes(x= n, y= `Name of University or College currently or previously attended?`))+
+  geom_bar(stat= "identity",  fill = "#21B6A8")+
+  geom_text(aes(label = n), vjust = -0.2)+
+  ggtitle("Count of Name of University or College currently or previously attended?")
+ 
+```
+

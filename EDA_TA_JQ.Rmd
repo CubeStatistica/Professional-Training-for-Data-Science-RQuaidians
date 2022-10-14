@@ -235,7 +235,157 @@ perc(Uni_Name)
 ggplot(data = Uni_Name, aes(x= n, y= `Name of University or College currently or previously attended?`))+
   geom_bar(stat= "identity",  fill = "#21B6A8")+
   geom_text(aes(label = n), vjust = -0.2)+
-  ggtitle("Count of Name of University or College currently or previously attended?")
+  ggtitle("Count of Name of University or College")
  
+```
+
+
+## Table of 
+
+```{r}
+data_Degree <- df_Course %>% group_by(`Discipline of Degree?`)%>% count()%>% arrange(desc(n))
+perc(data_Degree)
+```
+
+
+```{r}
+df_Course <- df_Course %>% mutate(Paid_Course = case_when(df_Course$`Do you understand that this is a paid course ?...3` == 'Yes' ~'1',
+                                                          df_Course$`Do you understand that this is a paid course ?...3` == 'yes' ~'1',
+                                                          df_Course$`Do you understand that this is a paid course ?...3` == 'No' ~'0',
+                                                          df_Course$`Do you understand that this is a paid course ?...3` == 'no' ~'0'))
+```
+
+### Table of Paid Course Understanding
+
+```{r}
+data_Paid <- df_Course %>% group_by(Paid_Course)%>% count()%>% arrange(desc(n))
+perc(data_Paid)
+```
+
+### Bar chart of Paid Course Understanding.
+
+```{r}
+ggplot(data = data_Paid, aes(x= n, y= Paid_Course))+
+  geom_bar(stat= "identity",  fill = "#21B6A8")+
+  geom_text(aes(label = n), vjust = -0.2)+
+  ggtitle("Count ofPaid Course Understanding")
+ 
+```
+
+### Save Cleaned data
+
+```{r}
+library(rio)
+export(df_Course, "Cleaned_CData.csv")
+```
+
+## ML Model.
+
+
+## Rename Columns
+
+```{r}
+df_Course <- df_Course %>% 
+           rename("hear_Course" = "How and where did you hear about this course?",
+                  "Degree" = "Latest Degree Completed or in Progress?",
+                  "Certificate"    = "Have you taken any foundational course in data science / econometrics / statistics / computer science?",
+                  "Lang_of_Interest" = 'What programming language(s) are you most comfortable in (R, Python, Java, JS, etc.)? If none please type "None".',
+                  #"Uni_Name" = 'Name of University or College currently or previously attended?',
+                  #"Experience" ='Prior Work Experience in Data Science or Machine Learning'
+                  
+              )
+
+colnames(df_Course)
+```
+
+
+
+
+```{r}
+set.seed(1000)
+fractionTraining   <- 0.50
+fractionValidation <- 0.25
+fractionTest       <- 0.25
+
+# Compute sample sizes.
+sampleSizeTraining   <- floor(fractionTraining   * nrow(df_Course))
+sampleSizeValidation <- floor(fractionValidation * nrow(df_Course))
+sampleSizeTest       <- floor(fractionTest       * nrow(df_Course))
+```
+
+
+Create the randomly-sampled indices for the dataframe. Use setdiff() to
+ avoid overlapping subsets of indices.
+
+```{r}
+
+indicesTraining    <- sort(sample(seq_len(nrow(df_Course)), size=sampleSizeTraining))
+indicesNotTraining <- setdiff(seq_len(nrow(df_Course)), indicesTraining)
+indicesValidation  <- sort(sample(indicesNotTraining, size=sampleSizeValidation))
+indicesTest        <- setdiff(indicesNotTraining, indicesValidation)
+```
+
+Finally, output the three dataframes for training, validation and test.
+
+Training Set
+
+```{r}
+
+dfTraining   <- df_Course[indicesTraining, ]
+nrow(dfTraining)
+
+
+```
+
+Validation Set
+
+
+```{r}
+
+dfValidation <- df_Course[indicesValidation, ]
+
+nrow(dfValidation)
+```
+
+Test Set
+
+```{r}
+
+dfTest<- df_Course[indicesTest, ]
+
+nrow(dfTest)
+
+```
+
+
+
+```{r}
+
+
+```
+
+
+```{r}
+Train <- lapply(dfTraining, as.factor)
+
+lm_model = lm(Age ~ Degree,Uni_Name, data = Train) 
+
+```
+
+```{r}
+p1 <- predict(lm_model, Train, type = 'response')
+head(p1)
+```
+
+```{r}
+pred1 <- ifelse(p1>0.5, 1, 0)
+tab1 <- table(Predicted = pred1, Actual = Train$Age)
+tab1
+```
+
+
+```{r}
+p1 <- predict(lm_model, dfTest, type = 'response')
+head(p1)
 ```
 

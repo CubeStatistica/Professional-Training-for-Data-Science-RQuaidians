@@ -219,7 +219,7 @@ data_Uni <- df_Course %>% group_by(`Name of University or College currently or p
 perc(data_Uni)
 ```
 
-### Get top 7 Cities
+### Get top 7 Name of University or College currently or previously attended?
 
 
 ```{r}
@@ -278,6 +278,25 @@ ggplot(data = data_Paid, aes(x= n, y= Paid_Course))+
 library(rio)
 export(df_Course, "Cleaned_CData.csv")
 ```
+
+## Table of Certificate.
+
+```{r}
+data_Certificate <- df_Course %>% group_by(Certificate)%>% count()%>% arrange(desc(n))
+perc(data_Certificate)
+```
+
+
+### Bar chart of Certificate.
+
+```{r}
+ggplot(data = data_Certificate, aes(x= n, y= Certificate))+
+  geom_bar(stat= "identity",  fill = "#21B6A8")+
+  geom_text(aes(label = n), vjust = -0.2)+
+  ggtitle("Count of Each Certification.")
+ 
+```
+
 
 ## ML Model.
 
@@ -365,6 +384,8 @@ nrow(dfTest)
 ```
 
 
+
+
 ```{r}
 Train <- lapply(dfTraining, as.factor)
 
@@ -386,6 +407,6 @@ tab1
 
 ```{r}
 p1 <- predict(lm_model, dfTest, type = 'response')
-head(p1)
+(p1)
 ```
 

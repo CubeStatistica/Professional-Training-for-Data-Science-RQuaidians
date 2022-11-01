@@ -298,6 +298,130 @@ ggplot(data = data_Certificate, aes(x= n, y= Certificate))+
 ```
 
 
+## Table of language of Interest.
+
+```{r}
+data_interestLang <- df_Course %>% group_by(Lang_of_Interest)%>% count()%>% arrange(desc(n))
+perc(data_interestLang)
+``` 
+
+
+
+## Creating new variable language of Interest.
+
+```{r}
+df_Course <- df_Course %>% mutate(Language_Interest = case_when(Lang_of_Interest == 'Python' ~'Python',
+                                                                Lang_of_Interest == 'python' ~'Python',
+                                                                Lang_of_Interest == 'Pyhton' ~'Python',
+                                                                Lang_of_Interest == 'pythob' ~'pyhton',
+                                                                Lang_of_Interest ==     'R' ~'R',
+                                                                Lang_of_Interest ==      'A little bit of R' ~'R',
+                                                                Lang_of_Interest == 'Have taken a course in R but not so comfortable. I have just gone through python and find it more doabl' ~'R',
+                                                                Lang_of_Interest == 'I have nearly completed the specialization called Python for everybody' ~'Pyhton',
+                                                                Lang_of_Interest == 'Only in R' ~'R',
+                                                                Lang_of_Interest == 'PYTHON' ~'Python',
+                                                                Lang_of_Interest ==      'R Programming Language' ~'R',
+                                                                Lang_of_Interest ==  'Java' ~'Java',
+                                                                Lang_of_Interest ==    'JS' ~'Java',
+                                                                Lang_of_Interest ==  'java' ~'Java',
+                                                                Lang_of_Interest ==   'Java or js' ~'Java',
+                                                                Lang_of_Interest == 'Javascript' ~'Java',
+                                                                Lang_of_Interest == 'JavaScript' ~'Java',
+                                                                Lang_of_Interest ==    'Js, Java' ~'Java',
+                                                                Lang_of_Interest ==    'JS, Java' ~'Java',
+                                                                Lang_of_Interest ==  'None' ~'None',
+                                                                Lang_of_Interest ==      'R and Python' ~'R, Python',
+                                                                Lang_of_Interest == 'Python and java' ~'Python, Java',
+                                                                Lang_of_Interest == 'Python and R' ~'R, Python',
+                                                                Lang_of_Interest ==     'R, Python' ~'R, Python',
+                                                                Lang_of_Interest ==  'none' ~'None',
+                                                                Lang_of_Interest == 'Python and Java' ~'Python, Java',
+                                                                Lang_of_Interest == 'Python, java' ~'Python, Java',
+                                                                Lang_of_Interest == 'Python, Java' ~'Python, Java',
+                                                                Lang_of_Interest == 'Python, R' ~'R, Python',
+                                                                Lang_of_Interest == 'Python, SQL' ~'Python, SQL',
+                                                                Lang_of_Interest == 'Python,JS' ~'Python, Java',
+                                                                Lang_of_Interest ==   '.NET CORE' ~'.NET CORE',
+                                                                Lang_of_Interest ==      'C language, Java, python.' ~'Python, Java, C',
+                                                                Lang_of_Interest ==      'C sharp' ~'C#',
+                                                                Lang_of_Interest ==     'C#' ~'C#',
+                                                                Lang_of_Interest ==    'C++ and Python' ~'Python, C',
+                                                                Lang_of_Interest ==    'C++, Python' ~'Python, C',
+                                                                Lang_of_Interest ==   'HTML 5, Java, python' ~'Python, Java, HTML5',
+                                                                Lang_of_Interest ==      'I haven’t done this before but I want to learn this skill.' ~'None',
+                                                                Lang_of_Interest ==   'Java & python' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Java and javascript' ~'Java',
+                                                                Lang_of_Interest ==   'Java and Python' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Java, Phyton, JS' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Java, Python' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Java, python, c' ~'Python, Java, C',
+                                                                Lang_of_Interest ==  'Java, Python, JS' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Java,python' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Java,Python' ~'Python, Java',
+                                                                Lang_of_Interest ==   'JavaScript, Python' ~'Python, Java',
+                                                                Lang_of_Interest ==     'JS Java & Python' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Nones' ~'None',
+                                                                Lang_of_Interest ==   'Pyrhon c++' ~'Python, C',
+                                                                Lang_of_Interest ==   'Python & Java' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Python , JavaScript , C++' ~'Python, Java, C',
+                                                                Lang_of_Interest ==   'Python , JS' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Python . R' ~'R, Python',
+                                                                Lang_of_Interest ==   'python and java' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Python and linux' ~'Python, Linux',
+                                                                Lang_of_Interest ==   'Python but want to learn R' ~'R, Python',
+                                                                Lang_of_Interest ==   'Python Javascript' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Python, C++ and JS' ~'Python, Java, C',
+                                                                Lang_of_Interest ==   'Python, C++, MATLAB, JS,' ~'Python, Java, C, MATLAB',
+                                                                Lang_of_Interest ==   'Python, C++, VB' ~'Python, C, C#',
+                                                                Lang_of_Interest ==   'Python, Java, Javascript' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Python, Java, Javascript, dart' ~'Python, Java, Dart',
+                                                                Lang_of_Interest ==   'Python, Java, JS, HTML, CSS' ~'Python, Java, HTML, CSS',
+                                                                Lang_of_Interest ==   'Python, Java, PHP, C++' ~'Python, Java, C, PHP',
+                                                                Lang_of_Interest ==   'Python, Java, R' ~'R, Python, Java',
+                                                                Lang_of_Interest ==   'Python, Java.' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Python, JavaScript' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Python, PL/SQL' ~'Python, SQL',
+                                                                Lang_of_Interest ==   'Python, R, STATA and SQL' ~'R, Python, SQL',
+                                                                Lang_of_Interest ==   'Python,c#' ~'Python, C',
+                                                                Lang_of_Interest ==   'python,Js' ~'Python, Java',
+                                                                Lang_of_Interest ==      'R ,java' ~'R, Java',
+                                                                Lang_of_Interest ==      'R and python' ~'R, Python',
+                                                                Lang_of_Interest ==      'R and SQL' ~'R, SQL',
+                                                                Lang_of_Interest ==      'R python' ~'R, Python',
+                                                                Lang_of_Interest ==     'R, paython' ~'R, Python',
+                                                                Lang_of_Interest ==     'R, python' ~'R, Python',
+                                                                Lang_of_Interest ==   'R,Python' ~'R, Python',
+                                                                Lang_of_Interest ==   'React and JS' ~'React, Java',
+                                                                Lang_of_Interest ==   'NONE' ~'None',
+                                                                Lang_of_Interest ==   'Java &  python' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Python, SQL, R, Java' ~'R, Python, Java, SQL',
+                                                                Lang_of_Interest ==   'Python, SQL, Java' ~'Python, Java, SQL', 
+                                                                Lang_of_Interest ==   'SQL' ~'SQL'))
+
+```
+
+## Table of language of Interest.
+
+```{r}
+data_Lang <- df_Course %>% group_by(Language_Interest)%>% count()%>% arrange(desc(n))
+perc(data_Lang)
+``` 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## ML Model.
 
 

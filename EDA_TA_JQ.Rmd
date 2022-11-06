@@ -279,6 +279,25 @@ library(rio)
 export(df_Course, "Cleaned_CData.csv")
 ```
 
+
+## Rename Columns
+
+```{r}
+df_Course <- df_Course %>% 
+           rename("hear_Course" = "How and where did you hear about this course?",
+                  "Degree" = "Latest Degree Completed or in Progress?",
+                  "Certificate"    = "Have you taken any foundational course in data science / econometrics / statistics / computer science?",
+                  "Lang_of_Interest" = 'What programming language(s) are you most comfortable in (R, Python, Java, JS, etc.)? If none please type "None".',
+                  "Uni_Name" = 'Name of University or College currently or previously attended?',
+                  "Experience" ='Prior Work Experience in Data Science or Machine Learning'
+                  
+              )
+
+colnames(df_Course)
+```
+
+
+
 ## Table of Certificate.
 
 ```{r}
@@ -425,21 +444,6 @@ perc(data_Lang)
 ## ML Model.
 
 
-## Rename Columns
-
-```{r}
-df_Course <- df_Course %>% 
-           rename("hear_Course" = "How and where did you hear about this course?",
-                  "Degree" = "Latest Degree Completed or in Progress?",
-                  "Certificate"    = "Have you taken any foundational course in data science / econometrics / statistics / computer science?",
-                  "Lang_of_Interest" = 'What programming language(s) are you most comfortable in (R, Python, Java, JS, etc.)? If none please type "None".',
-                  #"Uni_Name" = 'Name of University or College currently or previously attended?',
-                  #"Experience" ='Prior Work Experience in Data Science or Machine Learning'
-                  
-              )
-
-colnames(df_Course)
-```
 
 
 

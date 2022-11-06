@@ -24,6 +24,8 @@ perc <- function(data) {
 library(tidyverse)
 library(formattable)
 library(leaflet)
+library(tm)
+library(wordcloud)
 ```
 
 
@@ -332,7 +334,7 @@ perc(data_interestLang)
 df_Course <- df_Course %>% mutate(Language_Interest = case_when(Lang_of_Interest == 'Python' ~'Python',
                                                                 Lang_of_Interest == 'python' ~'Python',
                                                                 Lang_of_Interest == 'Pyhton' ~'Python',
-                                                                Lang_of_Interest == 'pythob' ~'pyhton',
+                                                                Lang_of_Interest == 'pythob' ~'python',
                                                                 Lang_of_Interest ==     'R' ~'R',
                                                                 Lang_of_Interest ==      'A little bit of R' ~'R',
                                                                 Lang_of_Interest == 'Have taken a course in R but not so comfortable. I have just gone through python and find it more doabl' ~'R',
@@ -427,9 +429,25 @@ perc(data_Lang)
 ``` 
 
 
+### Bar chart of Certificate.
 
+```{r}
+ggplot(data = data_Lang, aes(x= n, y= Language_Interest))+
+  geom_bar(stat= "identity",  fill = "#21B6A8")+
+  geom_text(aes(label = n), vjust = -0.2)+
+  ggtitle("Count of Language of Interest.")
+ 
+```
 
+## Word cloud of Primary Reason For Taking this Course
 
+```{r}
+Cleaned_data <- removeWords(df_Course$`Primary Reason for taking this course?`, stopwords("english"))
+wordcloud(Cleaned_data
+        , scale=c(5,0.5)    
+        , max.words=100
+        , colors=brewer.pal(2, "Dark2"))
+```
 
 
 

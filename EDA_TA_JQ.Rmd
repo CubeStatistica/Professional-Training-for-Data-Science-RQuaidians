@@ -450,9 +450,23 @@ wordcloud(Cleaned_data
 ```
 
 
+## Table of Prior Formal Education (course teaching or using R, university assignments, coding projects, course work, etc
+
+```{r}
+data_R_Education <- df_Course %>% group_by(`Prior Formal Education (course teaching or using R, university assignments, coding projects, course work, etc.) in R?`)%>% count()%>% arrange(desc(n))
+perc(data_R_Education)
+``` 
 
 
+### Bar chart of Prior Formal Education (course teaching or using R, university assignments, coding projects, course work, etc
 
+```{r}
+ggplot(data = data_R_Education, aes(x= n, y= `Prior Formal Education (course teaching or using R, university assignments, coding projects, course work, etc.) in R?`))+
+  geom_bar(stat= "identity",  fill = "#21B6A8")+
+  geom_text(aes(label = n), vjust = -0.2)+
+  ggtitle("Count of R Prioir Knowledge.")
+ 
+```
 
 
 

@@ -1,22 +1,19 @@
 import dash
 from dash import dcc
 from dash import html
+import plotly.express as px
+import pandas as pd
 
 app = dash.Dash(__name__, suppress_callback_exceptions=True)
 
+data = pd.read_csv("Data/Data - DS C1 Course.csv")
+
+fig = px.bar(data, x="Age", y="Are you currently attending University / College?", color="Payment", barmode="group")
 app.layout = html.Div(children=[
-    html.H1('Hello Dash'),
+    html.H1('Course Dashboard'),
     dcc.Graph(
         id='example-graph',
-        figure={
-            'data': [
-                {'x': [1, 2, 3], 'y': [4, 1, 2], 'type': 'bar', 'name': 'SF'},
-                {'x': [1, 2, 3], 'y': [2, 4, 5], 'type': 'bar', 'name': u'Montréal'},
-            ],
-            'layout': {
-                'title': 'Dash Data Visualization'
-            }
-        }
+        figure=fig
     )
 ])
 

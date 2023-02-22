@@ -1,0 +1,572 @@
+---
+title: "Exploraotry Data Analysis"
+author: "javaria"
+date: '2022-09-30'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Describe Functions.
+
+```{r}
+perc <- function(data) {
+  percent <- data %>% ungroup() %>% mutate(Percentage = (n/sum(n))*100)
+  return(percent)
+}
+
+```
+
+
+```{r}
+library(tidyverse)
+library(formattable)
+library(leaflet)
+library(tm)
+library(wordcloud)
+```
+
+
+# Read Dataset
+
+```{r}
+df_Course <- read_csv("Data/Data - DS C1 Course.csv")
+```
+
+# Univariate Analysis
+
+
+## Table of Age
+
+```{r}
+data_Age <- df_Course %>% group_by(Age)%>% count()%>% arrange(desc(n))
+perc(data_Age)
+```
+
+
+### Get top 7 Age Numbers
+
+
+```{r}
+Age_Name  <- data_Age %>% ungroup() %>% top_n(7, n) %>% arrange(desc(n))
+perc(Age_Name)
+```
+
+
+### Bar chart of Age
+
+```{r}
+ggplot(data = Age_Name, aes(x= n, y= Age ))+
+  geom_bar(stat= "identity",  fill = "#21B6A8")+
+  geom_text(aes(label = n), vjust = -0.2)+
+  ggtitle("Count of Age")
+ 
+```
+
+
+## Table of How and where did you hear about this course?
+
+```{r}
+data_Platform <- df_Course %>% group_by(`How and where did you hear about this course?`)%>% count()%>% arrange(desc(n))
+perc(data_Platform)
+```
+
+
+### Get top 7 How and where did you hear about this course?
+
+
+```{r}
+Platform_Name  <- data_Platform %>% ungroup() %>% top_n(7, n) %>% arrange(desc(n))
+perc(Platform_Name)
+```
+
+
+
+
+```{r}
+ggplot(data = Platform_Name, aes(x= n, y= `How and where did you hear about this course?` ))+
+  geom_bar(stat= "identity",  fill = "#21B6A8")+
+  geom_text(aes(label = n), vjust = -0.2)+
+  ggtitle("Count of How and where did you hear about this course?")
+ 
+```
+
+
+## Table of Which City are you currently residing in?
+
+```{r}
+data_City <- df_Course %>% group_by(`Which City are you currently residing in?`)%>% count()%>% arrange(desc(n))
+perc(data_City)
+```
+
+
+## Creating new variable name City.
+
+```{r}
+df_Course <- df_Course %>% mutate(City = case_when(`Which City are you currently residing in?` == 'Karachi' ~'Karachi',
+                                                   `Which City are you currently residing in?` == 'karachi' ~'Karachi',
+                                                   `Which City are you currently residing in?` == 'Peshawar' ~'Peshawar',
+                                                    `Which City are you currently residing in?` == 'KARACHI' ~'Karachi',
+                                                    `Which City are you currently residing in?` == 'Islamabad' ~'Islamabad',
+                                                    `Which City are you currently residing in?` == 'ISLAMABAD' ~'Islamabad',
+                                                    `Which City are you currently residing in?` == 'islamabad' ~'Islamabad',
+                                                    `Which City are you currently residing in?` == 'LAHORE' ~'Lahore',
+                                                    `Which City are you currently residing in?` == 'Lahore' ~'Lahore',
+                                                    `Which City are you currently residing in?` == 'Nowshera' ~'Nowshera',
+                                                    `Which City are you currently residing in?` == 'Rawalpindi' ~'Rawalpindi',
+                                                    `Which City are you currently residing in?` == 'Abbottabad' ~'Abbottabad',
+                                                    `Which City are you currently residing in?` == 'Abbottabad Pakistan' ~'Abbottabad',
+                                                    `Which City are you currently residing in?` == 'Ariana' ~'Ariana',
+                                                    `Which City are you currently residing in?` == 'Batkhela, Malakand' ~'Batkhela',
+                                                    `Which City are you currently residing in?` == 'Calgary' ~'Calgary',
+                                                    `Which City are you currently residing in?` == 'Chakwal' ~'Chakwal',
+                                                    `Which City are you currently residing in?` == 'D.I.Khan' ~'D.I.Khan',
+                                                    `Which City are you currently residing in?` == 'Denver' ~'Denver',
+                                                    `Which City are you currently residing in?` == 'Faisalabad' ~'Faisalabad',
+                                                    `Which City are you currently residing in?` == 'Gilgit' ~'Gilgit',
+                                                    `Which City are you currently residing in?` == 'Gohenberg' ~'Gohenberg',
+                                                    `Which City are you currently residing in?` == 'Guelph' ~'Guelph',
+                                                    `Which City are you currently residing in?` == 'Gujrat' ~'Gujrat',
+                                                    `Which City are you currently residing in?` == 'Hail' ~'Hail',
+                                                    `Which City are you currently residing in?` == 'Hyderabad' ~'Hyderabad',
+                                                    `Which City are you currently residing in?` == 'Jamshoro' ~'Jamshoro',
+                                                    `Which City are you currently residing in?` == 'Jaranwala' ~'Jaranwala',
+                                                    `Which City are you currently residing in?` == 'Jeddah' ~'Jeddah',
+                                                    `Which City are you currently residing in?` == 'Koln' ~'Koln',
+                                                    `Which City are you currently residing in?` == 'Kushtia' ~'Kushtia',
+                                                    `Which City are you currently residing in?` == 'Layyah' ~'Layyah',
+                                                    `Which City are you currently residing in?` == 'Multan' ~'Multan',
+                                                    `Which City are you currently residing in?` == 'Oakville' ~'Oakville',
+                                                    `Which City are you currently residing in?` == 'Sheikhupura' ~'Sheikhupura',
+                                                    `Which City are you currently residing in?` == 'Sialkot' ~'Sialkot',
+                                                    `Which City are you currently residing in?` == 'Toronto' ~'Toronto',
+                                                    `Which City are you currently residing in?` == 'NA' ~'na',
+                                                    `Which City are you currently residing in?` == 'Pakistan' ~'na'))
+
+```
+
+
+
+## Table of Which City are you currently residing in?
+
+```{r}
+data_city <- df_Course %>% group_by(City)%>% count()%>% arrange(desc(n))
+perc(data_city)
+```
+
+
+### Get top 7 Cities
+
+
+```{r}
+city_Name  <- data_city %>% ungroup() %>% top_n(7, n) %>% arrange(desc(n))
+perc(city_Name)
+```
+
+
+### Bar chart of City
+
+```{r}
+ggplot(data = city_Name, aes(x= n, y= City ))+
+  geom_bar(stat= "identity",  fill = "#21B6A8")+
+  geom_text(aes(label = n), vjust = -0.2)+
+  ggtitle("Count of City")
+ 
+```
+
+## Table of Are you currently attending University / College?
+
+```{r}
+data_cStudy <- df_Course %>% group_by(`Are you currently attending University / College?`)%>% count()%>% arrange(desc(n))
+perc(data_cStudy)
+```
+
+
+### Bar chart of Are you currently attending University / College?
+
+```{r}
+ggplot(data = data_cStudy, aes(x= n, y= `Are you currently attending University / College?` ))+
+  geom_bar(stat= "identity",  fill = "#21B6A8")+
+  geom_text(aes(label = n), vjust = -0.2)+
+  ggtitle("Count of Are you currently attending University / College?")
+ 
+```
+
+## Table of Latest Degree Completed or in Progress?
+
+```{r}
+data_lStudy <- df_Course %>% group_by(`Latest Degree Completed or in Progress?`)%>% count()%>% arrange(desc(n))
+perc(data_lStudy)
+```
+
+
+### Bar chart of Latest Degree Completed or in Progress?
+
+```{r}
+ggplot(data = data_lStudy, aes(x= n, y= `Latest Degree Completed or in Progress?`))+
+  geom_bar(stat= "identity",  fill = "#21B6A8")+
+  geom_text(aes(label = n), vjust = -0.2)+
+  ggtitle("Count of Latest Degree Completed or in Progress?")
+ 
+```
+
+
+
+## Table of Name of University or College currently or previously attended?
+
+```{r}
+data_Uni <- df_Course %>% group_by(`Name of University or College currently or previously attended?`)%>% count()%>% arrange(desc(n))
+perc(data_Uni)
+```
+
+### Get top 7 Name of University or College currently or previously attended?
+
+
+```{r}
+Uni_Name  <- data_Uni %>% ungroup() %>% top_n(7, n) %>% arrange(desc(n))
+perc(Uni_Name)
+```
+
+
+
+### Bar chart of Latest Degree Completed or in Progress?
+
+```{r}
+ggplot(data = Uni_Name, aes(x= n, y= `Name of University or College currently or previously attended?`))+
+  geom_bar(stat= "identity",  fill = "#21B6A8")+
+  geom_text(aes(label = n), vjust = -0.2)+
+  ggtitle("Count of Name of University or College")
+ 
+```
+
+
+## Table of 
+
+```{r}
+data_Degree <- df_Course %>% group_by(`Discipline of Degree?`)%>% count()%>% arrange(desc(n))
+perc(data_Degree)
+```
+
+
+```{r}
+df_Course <- df_Course %>% mutate(Paid_Course = case_when(df_Course$`Do you understand that this is a paid course ?...3` == 'Yes' ~'1',
+                                                          df_Course$`Do you understand that this is a paid course ?...3` == 'yes' ~'1',
+                                                          df_Course$`Do you understand that this is a paid course ?...3` == 'No' ~'0',
+                                                          df_Course$`Do you understand that this is a paid course ?...3` == 'no' ~'0'))
+```
+
+### Table of Paid Course Understanding
+
+```{r}
+data_Paid <- df_Course %>% group_by(Paid_Course)%>% count()%>% arrange(desc(n))
+perc(data_Paid)
+```
+
+### Bar chart of Paid Course Understanding.
+
+```{r}
+ggplot(data = data_Paid, aes(x= n, y= Paid_Course))+
+  geom_bar(stat= "identity",  fill = "#21B6A8")+
+  geom_text(aes(label = n), vjust = -0.2)+
+  ggtitle("Count ofPaid Course Understanding")
+ 
+```
+
+### Save Cleaned data
+
+```{r}
+library(rio)
+export(df_Course, "Cleaned_CData.csv")
+```
+
+
+## Rename Columns
+
+```{r}
+df_Course <- df_Course %>% 
+           rename("hear_Course" = "How and where did you hear about this course?",
+                  "Degree" = "Latest Degree Completed or in Progress?",
+                  "Certificate"    = "Have you taken any foundational course in data science / econometrics / statistics / computer science?",
+                  "Lang_of_Interest" = 'What programming language(s) are you most comfortable in (R, Python, Java, JS, etc.)? If none please type "None".',
+                  "Uni_Name" = 'Name of University or College currently or previously attended?',
+                  "Experience" ='Prior Work Experience in Data Science or Machine Learning'
+                  
+              )
+
+colnames(df_Course)
+```
+
+
+
+## Table of Certificate.
+
+```{r}
+data_Certificate <- df_Course %>% group_by(Certificate)%>% count()%>% arrange(desc(n))
+perc(data_Certificate)
+```
+
+
+### Bar chart of Certificate.
+
+```{r}
+ggplot(data = data_Certificate, aes(x= n, y= Certificate))+
+  geom_bar(stat= "identity",  fill = "#21B6A8")+
+  geom_text(aes(label = n), vjust = -0.2)+
+  ggtitle("Count of Each Certification.")
+ 
+```
+
+
+## Table of language of Interest.
+
+```{r}
+data_interestLang <- df_Course %>% group_by(Lang_of_Interest)%>% count()%>% arrange(desc(n))
+perc(data_interestLang)
+``` 
+
+
+
+## Creating new variable language of Interest.
+
+```{r}
+df_Course <- df_Course %>% mutate(Language_Interest = case_when(Lang_of_Interest == 'Python' ~'Python',
+                                                                Lang_of_Interest == 'python' ~'Python',
+                                                                Lang_of_Interest == 'Pyhton' ~'Python',
+                                                                Lang_of_Interest == 'pythob' ~'python',
+                                                                Lang_of_Interest ==     'R' ~'R',
+                                                                Lang_of_Interest ==      'A little bit of R' ~'R',
+                                                                Lang_of_Interest == 'Have taken a course in R but not so comfortable. I have just gone through python and find it more doabl' ~'R',
+                                                                Lang_of_Interest == 'I have nearly completed the specialization called Python for everybody' ~'Pyhton',
+                                                                Lang_of_Interest == 'Only in R' ~'R',
+                                                                Lang_of_Interest == 'PYTHON' ~'Python',
+                                                                Lang_of_Interest ==      'R Programming Language' ~'R',
+                                                                Lang_of_Interest ==  'Java' ~'Java',
+                                                                Lang_of_Interest ==    'JS' ~'Java',
+                                                                Lang_of_Interest ==  'java' ~'Java',
+                                                                Lang_of_Interest ==   'Java or js' ~'Java',
+                                                                Lang_of_Interest == 'Javascript' ~'Java',
+                                                                Lang_of_Interest == 'JavaScript' ~'Java',
+                                                                Lang_of_Interest ==    'Js, Java' ~'Java',
+                                                                Lang_of_Interest ==    'JS, Java' ~'Java',
+                                                                Lang_of_Interest ==  'None' ~'None',
+                                                                Lang_of_Interest ==      'R and Python' ~'R, Python',
+                                                                Lang_of_Interest == 'Python and java' ~'Python, Java',
+                                                                Lang_of_Interest == 'Python and R' ~'R, Python',
+                                                                Lang_of_Interest ==     'R, Python' ~'R, Python',
+                                                                Lang_of_Interest ==  'none' ~'None',
+                                                                Lang_of_Interest == 'Python and Java' ~'Python, Java',
+                                                                Lang_of_Interest == 'Python, java' ~'Python, Java',
+                                                                Lang_of_Interest == 'Python, Java' ~'Python, Java',
+                                                                Lang_of_Interest == 'Python, R' ~'R, Python',
+                                                                Lang_of_Interest == 'Python, SQL' ~'Python, SQL',
+                                                                Lang_of_Interest == 'Python,JS' ~'Python, Java',
+                                                                Lang_of_Interest ==   '.NET CORE' ~'.NET CORE',
+                                                                Lang_of_Interest ==      'C language, Java, python.' ~'Python, Java, C',
+                                                                Lang_of_Interest ==      'C sharp' ~'C#',
+                                                                Lang_of_Interest ==     'C#' ~'C#',
+                                                                Lang_of_Interest ==    'C++ and Python' ~'Python, C',
+                                                                Lang_of_Interest ==    'C++, Python' ~'Python, C',
+                                                                Lang_of_Interest ==   'HTML 5, Java, python' ~'Python, Java, HTML5',
+                                                                Lang_of_Interest ==      'I haven’t done this before but I want to learn this skill.' ~'None',
+                                                                Lang_of_Interest ==   'Java & python' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Java and javascript' ~'Java',
+                                                                Lang_of_Interest ==   'Java and Python' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Java, Phyton, JS' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Java, Python' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Java, python, c' ~'Python, Java, C',
+                                                                Lang_of_Interest ==  'Java, Python, JS' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Java,python' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Java,Python' ~'Python, Java',
+                                                                Lang_of_Interest ==   'JavaScript, Python' ~'Python, Java',
+                                                                Lang_of_Interest ==     'JS Java & Python' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Nones' ~'None',
+                                                                Lang_of_Interest ==   'Pyrhon c++' ~'Python, C',
+                                                                Lang_of_Interest ==   'Python & Java' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Python , JavaScript , C++' ~'Python, Java, C',
+                                                                Lang_of_Interest ==   'Python , JS' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Python . R' ~'R, Python',
+                                                                Lang_of_Interest ==   'python and java' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Python and linux' ~'Python, Linux',
+                                                                Lang_of_Interest ==   'Python but want to learn R' ~'R, Python',
+                                                                Lang_of_Interest ==   'Python Javascript' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Python, C++ and JS' ~'Python, Java, C',
+                                                                Lang_of_Interest ==   'Python, C++, MATLAB, JS,' ~'Python, Java, C, MATLAB',
+                                                                Lang_of_Interest ==   'Python, C++, VB' ~'Python, C, C#',
+                                                                Lang_of_Interest ==   'Python, Java, Javascript' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Python, Java, Javascript, dart' ~'Python, Java, Dart',
+                                                                Lang_of_Interest ==   'Python, Java, JS, HTML, CSS' ~'Python, Java, HTML, CSS',
+                                                                Lang_of_Interest ==   'Python, Java, PHP, C++' ~'Python, Java, C, PHP',
+                                                                Lang_of_Interest ==   'Python, Java, R' ~'R, Python, Java',
+                                                                Lang_of_Interest ==   'Python, Java.' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Python, JavaScript' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Python, PL/SQL' ~'Python, SQL',
+                                                                Lang_of_Interest ==   'Python, R, STATA and SQL' ~'R, Python, SQL',
+                                                                Lang_of_Interest ==   'Python,c#' ~'Python, C',
+                                                                Lang_of_Interest ==   'python,Js' ~'Python, Java',
+                                                                Lang_of_Interest ==      'R ,java' ~'R, Java',
+                                                                Lang_of_Interest ==      'R and python' ~'R, Python',
+                                                                Lang_of_Interest ==      'R and SQL' ~'R, SQL',
+                                                                Lang_of_Interest ==      'R python' ~'R, Python',
+                                                                Lang_of_Interest ==     'R, paython' ~'R, Python',
+                                                                Lang_of_Interest ==     'R, python' ~'R, Python',
+                                                                Lang_of_Interest ==   'R,Python' ~'R, Python',
+                                                                Lang_of_Interest ==   'React and JS' ~'React, Java',
+                                                                Lang_of_Interest ==   'NONE' ~'None',
+                                                                Lang_of_Interest ==   'Java &  python' ~'Python, Java',
+                                                                Lang_of_Interest ==   'Python, SQL, R, Java' ~'R, Python, Java, SQL',
+                                                                Lang_of_Interest ==   'Python, SQL, Java' ~'Python, Java, SQL', 
+                                                                Lang_of_Interest ==   'SQL' ~'SQL'))
+
+```
+
+## Table of language of Interest.
+
+```{r}
+data_Lang <- df_Course %>% group_by(Language_Interest)%>% count()%>% arrange(desc(n))
+perc(data_Lang)
+``` 
+
+
+### Bar chart of Certificate.
+
+```{r}
+ggplot(data = data_Lang, aes(x= n, y= Language_Interest))+
+  geom_bar(stat= "identity",  fill = "#21B6A8")+
+  geom_text(aes(label = n), vjust = -0.2)+
+  ggtitle("Count of Language of Interest.")
+ 
+```
+
+## Word cloud of Primary Reason For Taking this Course
+
+```{r}
+Cleaned_data <- removeWords(df_Course$`Primary Reason for taking this course?`, stopwords("english"))
+wordcloud(Cleaned_data
+        , scale=c(5,0.5)    
+        , max.words=100
+        , colors=brewer.pal(2, "Dark2"))
+```
+
+
+## Table of Prior Formal Education (course teaching or using R, university assignments, coding projects, course work, etc
+
+```{r}
+data_R_Education <- df_Course %>% group_by(`Prior Formal Education (course teaching or using R, university assignments, coding projects, course work, etc.) in R?`)%>% count()%>% arrange(desc(n))
+perc(data_R_Education)
+``` 
+
+
+### Bar chart of Prior Formal Education (course teaching or using R, university assignments, coding projects, course work, etc
+
+```{r}
+ggplot(data = data_R_Education, aes(x= n, y= `Prior Formal Education (course teaching or using R, university assignments, coding projects, course work, etc.) in R?`))+
+  geom_bar(stat= "identity",  fill = "#21B6A8")+
+  geom_text(aes(label = n), vjust = -0.2)+
+  ggtitle("Count of R Prioir Knowledge.")
+ 
+```
+
+
+
+
+
+
+## ML Model.
+
+
+
+
+
+
+```{r}
+set.seed(1000)
+fractionTraining   <- 0.50
+fractionValidation <- 0.25
+fractionTest       <- 0.25
+
+# Compute sample sizes.
+sampleSizeTraining   <- floor(fractionTraining   * nrow(df_Course))
+sampleSizeValidation <- floor(fractionValidation * nrow(df_Course))
+sampleSizeTest       <- floor(fractionTest       * nrow(df_Course))
+```
+
+
+Create the randomly-sampled indices for the dataframe. Use setdiff() to
+ avoid overlapping subsets of indices.
+
+```{r}
+
+indicesTraining    <- sort(sample(seq_len(nrow(df_Course)), size=sampleSizeTraining))
+indicesNotTraining <- setdiff(seq_len(nrow(df_Course)), indicesTraining)
+indicesValidation  <- sort(sample(indicesNotTraining, size=sampleSizeValidation))
+indicesTest        <- setdiff(indicesNotTraining, indicesValidation)
+```
+
+Finally, output the three dataframes for training, validation and test.
+
+Training Set
+
+```{r}
+
+dfTraining   <- df_Course[indicesTraining, ]
+nrow(dfTraining)
+
+
+```
+
+Validation Set
+
+
+```{r}
+
+dfValidation <- df_Course[indicesValidation, ]
+
+nrow(dfValidation)
+```
+
+Test Set
+
+```{r}
+
+dfTest<- df_Course[indicesTest, ]
+
+nrow(dfTest)
+
+```
+
+
+
+```{r}
+
+
+```
+
+
+
+
+```{r}
+Train <- lapply(dfTraining, as.factor)
+
+lm_model = lm(Age ~ Degree,Uni_Name, data = Train) 
+
+```
+
+```{r}
+p1 <- predict(lm_model, Train, type = 'response')
+head(p1)
+```
+
+```{r}
+pred1 <- ifelse(p1>0.5, 1, 0)
+tab1 <- table(Predicted = pred1, Actual = Train$Age)
+tab1
+```
+
+
+```{r}
+p1 <- predict(lm_model, dfTest, type = 'response')
+(p1)
+```
+
